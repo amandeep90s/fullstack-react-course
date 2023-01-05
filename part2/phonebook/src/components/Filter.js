@@ -7,7 +7,9 @@ const Filter = ({ persons, setPersons, initialData }) => {
 		const searchField = event.target.value;
 		setSearch(searchField);
 		const filteredNumber = searchField
-			? persons.filter((person) => person.name.toLowerCase().match(searchField))
+			? persons.filter((person) =>
+					person.name.toLowerCase().match(searchField.toLowerCase())
+			  )
 			: initialData;
 		setPersons(filteredNumber);
 	};
