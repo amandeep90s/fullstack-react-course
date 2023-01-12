@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import noteService from './services/notes';
+import { getAll, create, update } from './services/notes';
 import Note from './components/Note';
 import Notification from './components/Notification';
 import Footer from './components/Footer';
@@ -10,7 +10,7 @@ const App = () => {
 	const [showAll, setShowAll] = useState(true);
 	const [errorMessage, setErrorMessage] = useState(null);
 	const hook = () => {
-		noteService.getAll().then((initialNotes) => {
+		getAll().then((initialNotes) => {
 			setNotes(initialNotes);
 		});
 	};
@@ -27,7 +27,7 @@ const App = () => {
 			important: Math.random() < 0.5,
 		};
 
-		noteService.create(noteObject).then((returnedNote) => {
+		create(noteObject).then((returnedNote) => {
 			setNotes(notes.concat(returnedNote));
 			setNewNote('');
 		});
@@ -41,12 +41,12 @@ const App = () => {
 		const note = notes.find((note) => note.id === noteId);
 		const changedNote = { ...note, important: !note.important };
 
-		noteService
-			.update(noteId, changedNote)
+		update(noteId, changedNote)
 			.then((returnedNote) => {
-				setNotes(
-					notes.map((note) => (note.id !== noteId ? note : returnedNote))
+				const updatdedNotes = notes.map((note) =>
+					note.id !== noteId ? note : changedNote
 				);
+				setNotes(updatdedNotes);
 			})
 			.catch((error) => {
 				setErrorMessage(
