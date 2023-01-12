@@ -24,7 +24,7 @@ mongoose.set('strictQuery', true);
 
 mongoose
 	.connect(url)
-	.then((result) => {
+	.then(() => {
 		console.log('connected');
 		if (name === null || number === null) {
 			Person.find({}).then((data) => {

@@ -36,16 +36,26 @@ const PersonForm = ({
 					setOldPersons(newPersonObject);
 				});
 		} else {
-			personService.create(newObject).then((returnedResponse) => {
-				setPersons(persons.concat(returnedResponse));
-				setOldPersons(persons.concat(returnedResponse));
-				setErrorMessage(`Added ${newObject.name}`);
-				setErrorType('success');
+			personService
+				.create(newObject)
+				.then((returnedResponse) => {
+					setPersons(persons.concat(returnedResponse));
+					setOldPersons(persons.concat(returnedResponse));
+					setErrorMessage(`Added ${newObject.name}`);
+					setErrorType('success');
 
-				setTimeout(() => {
-					setErrorMessage(null);
-				}, 5000);
-			});
+					setTimeout(() => {
+						setErrorMessage(null);
+					}, 5000);
+				})
+				.catch((error) => {
+					console.log(error);
+					setErrorMessage(error.response.data.error);
+					setErrorType('error');
+					setTimeout(() => {
+						setErrorMessage(null);
+					}, 5000);
+				});
 		}
 		setNewName('');
 		setNewPhone('');
@@ -62,7 +72,7 @@ const PersonForm = ({
 			<div>
 				number:{' '}
 				<input
-					type='number'
+					type='text'
 					value={newPhone}
 					onChange={handleNewPhone}
 					required

@@ -5,8 +5,9 @@ const url = process.env.MONGODB_URI;
 mongoose.set('strictQuery', true);
 
 mongoose
+	// @ts-ignore
 	.connect(url)
-	.then((result) => {
+	.then(() => {
 		console.log('connected to MongoDB');
 	})
 	.catch((error) => {
@@ -14,8 +15,15 @@ mongoose
 	});
 
 const noteSchema = new mongoose.Schema({
-	content: String,
-	date: Date,
+	content: {
+		type: String,
+		minLength: 5,
+		required: true,
+	},
+	date: {
+		type: Date,
+		required: true,
+	},
 	important: Boolean,
 });
 

@@ -19,7 +19,7 @@ app.get('/api/notes', (request, response) => {
 	});
 });
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
 	const body = request.body;
 
 	if (body.content === undefined) {
@@ -31,9 +31,12 @@ app.post('/api/notes', (request, response) => {
 		date: new Date(),
 	});
 
-	note.save().then((savedNote) => {
-		response.status(201).json(savedNote);
-	});
+	note
+		.save()
+		.then((savedNote) => {
+			response.status(201).json(savedNote);
+		})
+		.catch((error) => next(error));
 });
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -50,7 +53,7 @@ app.get('/api/notes/:id', (request, response, next) => {
 
 app.delete('/api/notes/:id', (request, response, next) => {
 	Note.findByIdAndRemove(request.params.id)
-		.then((result) => response.status(204).end())
+		.then(() => response.status(204).end())
 		.catch((error) => next(error));
 });
 
@@ -62,7 +65,11 @@ app.put('/api/notes/:id', (request, response, next) => {
 		important: body.important || false,
 	};
 
-	Note.findByIdAndUpdate(request.params.id, note, { new: true })
+	Note.findByIdAndUpdate(request.params.id, note, {
+		new: true,
+		runValidators: true,
+		context: 'query',
+	})
 		.then((updatedNote) => response.json(updatedNote))
 		.catch((error) => next(error));
 });
@@ -79,12 +86,15 @@ const errorHandler = (error, request, response, next) => {
 	if (error.name === 'CastError') {
 		return response.status(400).send({ error: 'malformatted id' });
 	}
+	if (error.name === 'ValidationError') {
+		return response.status(400).json({ error: error.message });
+	}
 	next(error);
 };
 // Handler for requests with result to errors
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 	console.log(`Server running on port: ${PORT}`);
 });

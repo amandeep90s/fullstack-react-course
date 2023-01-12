@@ -22,7 +22,7 @@ mongoose.set('strictQuery', true);
 
 mongoose
 	.connect(url)
-	.then((result) => {
+	.then(() => {
 		console.log('connected');
 
 		// const note = new Note({

@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static('build'));
 
-morgan.token('body', (req, res) => JSON.stringify(req?.body));
+morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(
 	morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
@@ -23,7 +23,7 @@ app.get('/api/persons', (request, response) => {
 });
 
 // Create new person
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
 	const body = request.body;
 	if (!body.name) {
 		return response.status(400).json({ error: 'name must be required field' });
@@ -38,12 +38,15 @@ app.post('/api/persons', (request, response) => {
 		name: body.name,
 		number: body.number,
 	});
-	person.save().then((savedPerson) => {
-		response.status(201).json(person);
-	});
+	person
+		.save()
+		.then((savedPerson) => {
+			response.status(201).json(savedPerson);
+		})
+		.catch((error) => next(error));
 });
-// Get single person
 
+// Get single person
 app.get('/api/persons/:id', (request, response, next) => {
 	Person.findById(request.params.id)
 		.then((person) => response.json(person))
@@ -93,7 +96,10 @@ const errorHandler = (error, request, response, next) => {
 	if (error.name === 'CastError') {
 		return response.status(400).send({ error: 'malformatted id' });
 	}
-	next();
+	if (error.name === 'ValidationError') {
+		return response.status(400).send({ error: error.message });
+	}
+	next(error);
 };
 app.use(errorHandler);
 
