@@ -4,13 +4,15 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon index.js"
+		"start": "nodemon index.js",
+		"build:ui": "rm -rf build && cd ../../part2/phonebook/ && npm run build && cp -r build ..part3/phonebook-backend"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "Amandeep Singh",
 	"license": "ISC",
 	"dependencies": {
 		"cors": "^2.8.5",
+		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
 		"mongoose": "^6.8.3"
 	},
