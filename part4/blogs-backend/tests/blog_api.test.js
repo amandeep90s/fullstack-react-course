@@ -70,6 +70,24 @@ describe('addition of a new blog', () => {
 		const blogsAtEnd = await helper.initialBlogs;
 		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 	});
+
+	test('fails with status cod 401 if token in invalid', async () => {
+		const newBlog = {
+			title: 'My new post is from earth',
+			author: 'Amandeep Singh',
+			url: 'https://instagram.com',
+			user: '63c28b25dcf99ad13cffaab5',
+		};
+
+		await api
+			.post('/api/blogs')
+			.send(newBlog)
+			.set('Authorization', 'Bearer 1234')
+			.expect(401);
+
+		const blogsAtEnd = await helper.initialBlogs;
+		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+	});
 });
 
 describe('deletion of a blog', () => {
@@ -93,6 +111,7 @@ describe('updation of a blog', () => {
 		const blogToDelete = blogsAtStart[0];
 		const updateBlog = { likes: 77 };
 
+		// @ts-ignore
 		await api.put(`/api/blogs/${blogToDelete.id}`).send(updateBlog).expect(200);
 
 		const blogsAtEnd = await helper.blogsInDb();

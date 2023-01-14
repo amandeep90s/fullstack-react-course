@@ -1,8 +1,8 @@
 POST http://localhost:3001/api/notes/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYW1hbmRlZXAiLCJpZCI6IjYzYzIzZWZjZWJkM2EzMGRiNzc4MDU4YiIsImlhdCI6MTY3MzY4MDMzMH0.fx2_1WfyQbF8GONgnyblXU13d8ivWQzVIRscU6mgMDU
 
 {
-    "content": "PHP is server side language",
-    "important": false,
-    "userId": "63c241b07fbfd54e7e38ce14"
+    "content": "Java is server side language",
+    "important": true
 }

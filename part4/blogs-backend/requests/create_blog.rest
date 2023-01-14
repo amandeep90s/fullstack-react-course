@@ -1,8 +1,9 @@
 POST http://localhost:3001/api/blogs/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYW1hbmRlZXAiLCJpZCI6IjYzYzI4MDZjMzhkOTE5MGJjMTVlODM1MiIsImlhdCI6MTY3MzY5MjU2Mn0.Nx8rJ0IRxFzBkkzryRem2-9NThAquc-FNBon9G6H7p4
 
 {
-    "title": "My Third Blog",
+    "title": "My Fourth Blog",
     "author": "John Doe",
     "url": "https://google.com",
     "likes": 1
