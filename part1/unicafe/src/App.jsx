@@ -21,12 +21,15 @@ const App = () => {
 			<Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
 			<Button handleClick={() => setBad(bad + 1)} text="bad" />
 			<Heading title="Statistics" />
-			<Info text="good" value={good} />
-			<Info text="neutral" value={neutral} />
-			<Info text="bad" value={bad} />
-			<Info text="all" value={totalFeedback} />
-			<Info text="average" value={averageScore} />
-			<Info text="positive" value={positiveFeedback} />
+
+			<Statistics
+				good={good}
+				bad={bad}
+				neutral={neutral}
+				totalFeedback={totalFeedback}
+				averageScore={averageScore}
+				positiveFeedback={positiveFeedback}
+			/>
 		</>
 	);
 };
@@ -37,10 +40,33 @@ const Button = ({ handleClick, text }) => (
 	<button onClick={handleClick}>{text}</button>
 );
 
-const Info = ({ text, value }) => (
+const StatisticLine = ({ text, value }) => (
 	<p>
 		{text}:{value}
 	</p>
 );
+
+const Statistics = (props) => {
+	if (!props.good && !props.bad && !props.neutral) {
+		return <p>Ne feedback given</p>;
+	}
+
+	return (
+		<>
+			<StatisticLine text="good" value={props.good} />
+			<StatisticLine text="neutral" value={props.neutral} />
+			<StatisticLine text="bad" value={props.bad} />
+			<StatisticLine text="all" value={props.totalFeedback} />
+			<StatisticLine
+				text="average"
+				value={Math.floor(props.averageScore * 10) / 10}
+			/>
+			<StatisticLine
+				text="positive"
+				value={`${Math.floor(props.positiveFeedback * 10) / 10} %`}
+			/>
+		</>
+	);
+};
 
 export default App;
