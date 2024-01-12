@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = (props) => {
+	const [counter, setCounter] = useState(0);
+	console.log("rendering with counter value", counter);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+	const increaseByOne = () => {
+		console.log("increasing, value before", counter);
+		setCounter(counter + 1);
+	};
+	const decreaseByOne = () => {
+		console.log("decreasing, value before", counter);
+		setCounter(counter - 1);
+	};
 
-export default App
+	const setZero = () => {
+		console.log("resetting to zero, value before", counter);
+		setCounter(0);
+	};
+
+	return (
+		<div>
+			<Display counter={counter} />
+			<Button text="plus" onClick={increaseByOne} />
+			<Button text="reset" onClick={setZero} />
+			<Button text="minus" onClick={decreaseByOne} />
+		</div>
+	);
+};
+
+const Display = ({ counter }) => <div>{counter}</div>;
+
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
+
+export default App;
