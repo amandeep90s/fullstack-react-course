@@ -1,35 +1,29 @@
 import { useState } from "react";
 
-const App = (props) => {
-	const [counter, setCounter] = useState(0);
-	console.log("rendering with counter value", counter);
+const App = () => {
+	const [left, setLeft] = useState(0);
+	const [right, setRight] = useState(0);
+	const [allClicks, setAllClicks] = useState([]);
 
-	const increaseByOne = () => {
-		console.log("increasing, value before", counter);
-		setCounter(counter + 1);
-	};
-	const decreaseByOne = () => {
-		console.log("decreasing, value before", counter);
-		setCounter(counter - 1);
+	const handleLeftClick = () => {
+		setAllClicks(allClicks.concat("L"));
+		setLeft(left + 1);
 	};
 
-	const setZero = () => {
-		console.log("resetting to zero, value before", counter);
-		setCounter(0);
+	const handleRightClick = () => {
+		setAllClicks(allClicks.concat("R"));
+		setRight(right + 1);
 	};
 
 	return (
 		<div>
-			<Display counter={counter} />
-			<Button text="plus" onClick={increaseByOne} />
-			<Button text="reset" onClick={setZero} />
-			<Button text="minus" onClick={decreaseByOne} />
+			{left}
+			<button onClick={handleLeftClick}>left</button>
+			<button onClick={handleRightClick}>right</button>
+			{right}
+			<p>{allClicks.join(" ")}</p>
 		</div>
 	);
 };
-
-const Display = ({ counter }) => <div>{counter}</div>;
-
-const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 export default App;
