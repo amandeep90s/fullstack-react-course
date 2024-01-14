@@ -10,7 +10,15 @@ const App = () => {
 		e.preventDefault();
 
 		if (newName) {
-			const newNameObject = { name: newName };
+			const isNameExist = persons.find(
+				(person) => newName.trim() === person.name
+			);
+
+			if (isNameExist) {
+				alert(`${newName} is already added to phonebook`);
+				return;
+			}
+			const newNameObject = { name: newName.trim() };
 
 			setPersons(persons.concat(newNameObject));
 			setNewName("");
