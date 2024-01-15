@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
+import Footer from "./components/Footer";
+import Notification from "./components/Notification";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./services/persons";
@@ -9,6 +11,8 @@ const App = () => {
 	const [newName, setNewName] = useState("");
 	const [newPhone, setNewPhone] = useState("");
 	const [filter, setFilter] = useState("");
+	const [errorMessage, setErrorMessage] = useState(null);
+	const [successMessage, setSuccessMessage] = useState(null);
 
 	useEffect(() => {
 		personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -46,12 +50,24 @@ const App = () => {
 						setPersons(newPersons);
 						setNewName("");
 						setNewPhone("");
+
+						setSuccessMessage(`Updated ${returnedPerson.name}`);
+
+						setTimeout(() => {
+							setSuccessMessage(null);
+						}, 5000);
 					});
 			} else {
 				personService.create(newPersonObject).then((returnedPerson) => {
 					setPersons(persons.concat(returnedPerson));
 					setNewName("");
 					setNewPhone("");
+
+					setSuccessMessage(`Added ${returnedPerson.name}`);
+
+					setTimeout(() => {
+						setSuccessMessage(null);
+					}, 5000);
 				});
 			}
 		}
@@ -60,9 +76,20 @@ const App = () => {
 	const handleDelete = (id) => {
 		const person = persons.find((person) => person.id === id);
 		if (confirm(`Delete ${person.name} ?`)) {
-			personService.destroy(person.id).then(() => {
-				setPersons(persons.filter((person) => person.id !== id));
-			});
+			personService
+				.destroy(person.id)
+				.then(() => {
+					setPersons(persons.filter((person) => person.id !== id));
+				})
+				.catch(() => {
+					setErrorMessage(
+						`Information of person has already been removed from server`
+					);
+
+					setTimeout(() => {
+						setErrorMessage(null);
+					}, 5000);
+				});
 		}
 	};
 
@@ -74,6 +101,11 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification
+				message={successMessage || errorMessage}
+				className={successMessage ? "success" : "error"}
+			/>
+
 			<Filter filter={filter} setFilter={setFilter} />
 
 			<h2>Add a new </h2>
@@ -87,6 +119,7 @@ const App = () => {
 
 			<h2>Numbers</h2>
 			<Persons personsToShow={personsToShow} handleDelete={handleDelete} />
+			<Footer />
 		</div>
 	);
 };
