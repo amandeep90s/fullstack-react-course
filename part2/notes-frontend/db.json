@@ -8,7 +8,7 @@
     {
       "id": "2",
       "content": "Browser can execute only JavaScript",
-      "important": false
+      "important": true
     },
     {
       "id": "3",
@@ -23,7 +23,7 @@
     {
       "id": "5",
       "content": "Hello world",
-      "important": false
+      "important": true
     },
     {
       "id": "6",
@@ -33,7 +33,7 @@
     {
       "id": "7211",
       "content": "My wife name is Kawaljit Kaur",
-      "important": false
+      "important": true
     }
   ]
 }
