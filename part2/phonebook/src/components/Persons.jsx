@@ -1,8 +1,8 @@
 import Person from "./Person";
 
-const Persons = ({ personsToShow }) => {
+const Persons = ({ personsToShow, handleDelete }) => {
 	return personsToShow.map((person) => (
-		<Person person={person} key={person.name} />
+		<Person person={person} handleDelete={handleDelete} key={person.name} />
 	));
 };
 

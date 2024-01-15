@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personService from "./services/persons";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -11,9 +11,7 @@ const App = () => {
 	const [filter, setFilter] = useState("");
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/persons").then((response) => {
-			setPersons(response.data);
-		});
+		personService.getAll().then((initialPersons) => setPersons(initialPersons));
 	}, []);
 
 	const handleNewName = (e) => setNewName(e.target.value);
@@ -25,18 +23,46 @@ const App = () => {
 
 		if (newName) {
 			const isNameExist = persons.find(
-				(person) => newName.trim() === person.name
+				(person) => newName.toLowerCase().trim() === person.name.toLowerCase()
 			);
 
-			if (isNameExist) {
-				alert(`${newName} is already added to phonebook`);
-				return;
-			}
-			const newPersonObject = { name: newName.trim(), phone: newPhone.trim() };
+			const newPersonObject = {
+				name: newName.trim(),
+				phone: newPhone.trim(),
+			};
 
-			setPersons(persons.concat(newPersonObject));
-			setNewName("");
-			setNewPhone("");
+			if (
+				isNameExist &&
+				confirm(
+					`${isNameExist.name} is already added to phonebook, replace the old number with a new one?`
+				)
+			) {
+				personService
+					.update(isNameExist.id, newPersonObject)
+					.then((returnedPerson) => {
+						const newPersons = persons.map((person) =>
+							person.id === isNameExist.id ? returnedPerson : person
+						);
+						setPersons(newPersons);
+						setNewName("");
+						setNewPhone("");
+					});
+			} else {
+				personService.create(newPersonObject).then((returnedPerson) => {
+					setPersons(persons.concat(returnedPerson));
+					setNewName("");
+					setNewPhone("");
+				});
+			}
+		}
+	};
+
+	const handleDelete = (id) => {
+		const person = persons.find((person) => person.id === id);
+		if (confirm(`Delete ${person.name} ?`)) {
+			personService.destroy(person.id).then(() => {
+				setPersons(persons.filter((person) => person.id !== id));
+			});
 		}
 	};
 
@@ -60,7 +86,7 @@ const App = () => {
 			/>
 
 			<h2>Numbers</h2>
-			<Persons personsToShow={personsToShow} />
+			<Persons personsToShow={personsToShow} handleDelete={handleDelete} />
 		</div>
 	);
 };
