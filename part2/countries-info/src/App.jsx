@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Country from "./components/Country";
+import CountryList from "./components/CountryList";
 
 const App = () => {
-	const [country, setCountry] = useState(null);
 	const [countries, setCountries] = useState([]);
 	const [filteredCountries, setFilteredCountries] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -27,16 +26,13 @@ const App = () => {
 	useEffect(() => {
 		setErrorMessage(null);
 		setFilteredCountries([]);
-		setCountry(null);
 
 		if (searchTerm) {
 			const result = countries.filter((country) =>
 				country?.name?.common?.toLowerCase().includes(searchTerm.toLowerCase())
 			);
 
-			if (result.length === 1) {
-				setCountry(result[0]);
-			} else if (result.length > 0 && result.length < 11) {
+			if (result.length > 0 && result.length < 11) {
 				setFilteredCountries(result);
 			} else {
 				setErrorMessage("Too many matches, specify another filter");
@@ -56,15 +52,7 @@ const App = () => {
 
 			{errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
-			{filteredCountries.map((country) => (
-				<div key={country.name.common}>
-					<p>
-						<h3>{country.name.common}</h3>
-					</p>
-				</div>
-			))}
-
-			{country && <Country country={country} />}
+			<CountryList countries={filteredCountries} showCountry={setSearchTerm} />
 		</div>
 	);
 };
