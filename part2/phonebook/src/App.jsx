@@ -32,7 +32,7 @@ const App = () => {
 
 			const newPersonObject = {
 				name: newName.trim(),
-				phone: newPhone.trim(),
+				number: newPhone.trim(),
 			};
 
 			if (
