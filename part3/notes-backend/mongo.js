@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const url = "mongodb://localhost:27017/notes-backend-db";
+const url = "mongodb://localhost:27017/notesApp";
 
 mongoose.set("strictQuery", false);
 mongoose.connect(url);
