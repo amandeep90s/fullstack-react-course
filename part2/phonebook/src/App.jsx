@@ -58,17 +58,26 @@ const App = () => {
 						}, 5000);
 					});
 			} else {
-				personService.create(newPersonObject).then((returnedPerson) => {
-					setPersons(persons.concat(returnedPerson));
-					setNewName("");
-					setNewPhone("");
+				personService
+					.create(newPersonObject)
+					.then((returnedPerson) => {
+						setPersons(persons.concat(returnedPerson));
+						setNewName("");
+						setNewPhone("");
 
-					setSuccessMessage(`Added ${returnedPerson.name}`);
+						setSuccessMessage(`Added ${returnedPerson.name}`);
 
-					setTimeout(() => {
-						setSuccessMessage(null);
-					}, 5000);
-				});
+						setTimeout(() => {
+							setSuccessMessage(null);
+						}, 5000);
+					})
+					.catch((error) => {
+						setErrorMessage(error.response.data.error);
+
+						setTimeout(() => {
+							setErrorMessage(null);
+						}, 5000);
+					});
 			}
 		}
 	};

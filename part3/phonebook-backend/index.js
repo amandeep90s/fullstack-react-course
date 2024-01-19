@@ -113,6 +113,8 @@ const errorHandler = (error, _request, response, next) => {
 
 	if (error.name === "CastError") {
 		return response.status(400).send({ error: "malformatted id" });
+	} else if (error.name === "ValidationError") {
+		return response.status(400).send({ error: error.message });
 	}
 
 	next(error);
@@ -121,5 +123,5 @@ const errorHandler = (error, _request, response, next) => {
 // handler of requests with result to errors
 app.use(errorHandler);
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
