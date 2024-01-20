@@ -33,7 +33,27 @@ const mostBlogs = (blogs) => {
     []
   );
 
-  return authorBlogs.sort((e1, e2) => e2.blogs - e1.blogs)[0];
+  return authorBlogs.toSorted((e1, e2) => e2.blogs - e1.blogs)[0];
+};
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return undefined;
+  }
+
+  const blogsByAuthor = groupBy(blogs, (blog) => blog.author);
+
+  const authorBlogs = Object.entries(blogsByAuthor).reduce(
+    (array, [author, blogList]) => {
+      return array.concat({
+        author,
+        likes: blogList.reduce((sum, blog) => sum + blog.likes, 0),
+      });
+    },
+    []
+  );
+
+  return authorBlogs.toSorted((el1, el2) => el2.likes - el1.likes)[0];
 };
 
 module.exports = {
@@ -41,4 +61,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };

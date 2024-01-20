@@ -91,3 +91,16 @@ describe('favorite blog', () => {
     expect(result).toEqual(withMost);
   });
 });
+
+describe('most likes', () => {
+  test('when list has many blogs is the author that has most', () => {
+    const result = listHelper.mostLikes(blogs);
+
+    const withMost = {
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
+    };
+
+    expect(result).toEqual(withMost);
+  });
+});
