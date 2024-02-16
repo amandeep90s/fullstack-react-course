@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "node --test",
+    "test": "cross-env NODE_ENV=test node --test",
     "build:ui": "rm -rf dist && cd ../../part2/notes-frontend && npm run build && cp -r dist ../../part4/notes-backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "lint": "eslint ."
@@ -24,9 +24,5 @@
     "eslint": "^8.56.0",
     "nodemon": "^3.0.3",
     "supertest": "^6.3.4"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "globalTeardown": "./tests/teardown.js"
   }
 }

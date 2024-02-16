@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const url = process.env.MONGODB_URI;
+const url = process.env.TEST_MONGODB_URI;
 
 mongoose.set('strictQuery', false);
 mongoose.connect(url);
@@ -14,7 +14,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema);
 
 const note = new Note({
-  content: 'CSS3 is super',
+  content: 'HTML is super',
   important: true,
 });
 
