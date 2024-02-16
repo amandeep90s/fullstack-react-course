@@ -4,7 +4,6 @@ const Note = require('../models/note');
 notesRouter.get('/', async (request, response, next) => {
   try {
     const notes = await Note.find({});
-
     response.json(notes);
   } catch (error) {
     next(error);
@@ -15,9 +14,10 @@ notesRouter.get('/:id', async (request, response, next) => {
   try {
     const note = await Note.findById(request.params.id);
     if (note) {
-      return response.json(note);
+      response.json(note);
+    } else {
+      response.status(404).json({ error: 'Note does not found' });
     }
-    response.status(404).json({ error: 'Note does not found' });
   } catch (error) {
     next(error);
   }
@@ -25,12 +25,8 @@ notesRouter.get('/:id', async (request, response, next) => {
 
 notesRouter.delete('/:id', async (request, response, next) => {
   try {
-    const note = await Note.findByIdAndDelete(request.params.id);
-
-    if (note) {
-      return response.status(204).end();
-    }
-    response.status(404).json({ error: 'Note does not found' });
+    await Note.findByIdAndDelete(request.params.id);
+    return response.status(204).end();
   } catch (error) {
     next(error);
   }
@@ -51,7 +47,7 @@ notesRouter.post('/', async (request, response, next) => {
 
     const savedNote = await note.save();
 
-    response.json(savedNote);
+    response.status(201).json(savedNote);
   } catch (error) {
     next(error);
   }
