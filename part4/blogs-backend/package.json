@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "node --test",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint ."
@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "eslint": "^8.56.0",
-    "jest": "^29.7.0",
     "nodemon": "^3.0.3"
   },
   "jest": {

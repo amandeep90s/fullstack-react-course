@@ -1,3 +1,5 @@
+const { test, describe } = require('node:test');
+const assert = require('node:assert');
 const listHelper = require('../utils/list_helper');
 
 const blogs = [
@@ -54,14 +56,37 @@ const blogs = [
 test('dummy returns one', () => {
   const result = listHelper.dummy(blogs);
 
-  expect(result).toBe(1);
+  assert.strictEqual(result, 1);
 });
 
 describe('total likes', () => {
+  test('of empty list is zero', () => {
+    const result = listHelper.totalLikes([]);
+
+    assert.strictEqual(result, 0);
+  });
+
   test('when list has only one blog, equals the likes of that', () => {
+    const listWithOneBlog = [
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+        __v: 0,
+      },
+    ];
+
+    const result = listHelper.totalLikes(listWithOneBlog);
+
+    assert.strictEqual(result, 5);
+  });
+
+  test('of a bigger list is calculated right', () => {
     const result = listHelper.totalLikes(blogs);
 
-    expect(result).toBe(36);
+    assert.strictEqual(result, 36);
   });
 });
 
@@ -75,7 +100,7 @@ describe('favoriteBlog', () => {
       likes: 12,
     };
 
-    expect(result).toEqual(theBest);
+    assert.deepStrictEqual(result, theBest);
   });
 });
 
@@ -88,7 +113,7 @@ describe('favorite blog', () => {
       blogs: 3,
     };
 
-    expect(result).toEqual(withMost);
+    assert.deepStrictEqual(result, withMost);
   });
 });
 
@@ -101,6 +126,6 @@ describe('most likes', () => {
       likes: 17,
     };
 
-    expect(result).toEqual(withMost);
+    assert.deepStrictEqual(result, withMost);
   });
 });
