@@ -1,12 +1,12 @@
 const Blog = require('../models/blog');
 
 const getBlogs = async (request, response) => {
-  const blogs = Blog.find({});
+  const blogs = await Blog.find({});
   response.status(200).json(blogs);
 };
 
 const getBlog = async (request, response) => {
-  const blog = Blog.findById(request.params.id);
+  const blog = await Blog.findById(request.params.id);
   if (blog) {
     response.json(blog);
   } else {
@@ -29,7 +29,7 @@ const createBlog = async (request, response) => {
 
   const blogObject = { title, author, url };
 
-  const blog = Blog.create(blogObject);
+  const blog = await Blog.create(blogObject);
 
   response.status(201).json(blog);
 };
@@ -49,7 +49,7 @@ const updateBlog = async (request, response) => {
 
   const updatedBlogObject = { title, author, url, likes };
 
-  const updatedBlog = Blog.findByIdAndUpdate(
+  const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
     updatedBlogObject,
     {
@@ -63,7 +63,7 @@ const updateBlog = async (request, response) => {
 };
 
 const deleteBlog = async (request, response) => {
-  Blog.findByIdAndDelete(request.params.id);
+  await Blog.findByIdAndDelete(request.params.id);
   response.status(204).end();
 };
 
