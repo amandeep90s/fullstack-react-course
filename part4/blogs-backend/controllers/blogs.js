@@ -1,75 +1,76 @@
-const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 
-blogsRouter.get('/', (request, response, next) => {
-  Blog.find({})
-    .then((blogs) => response.json(blogs))
-    .catch((error) => next(error));
-});
+const getBlogs = async (request, response) => {
+  const blogs = Blog.find({});
+  response.status(200).json(blogs);
+};
 
-blogsRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then((blog) => response.json(blog))
-    .catch((error) => next(error));
-});
+const getBlog = async (request, response) => {
+  const blog = Blog.findById(request.params.id);
+  if (blog) {
+    response.json(blog);
+  } else {
+    response.status(404).json({ error: 'Blog does not found' });
+  }
+};
 
-blogsRouter.post('/', (request, response, next) => {
-  const { body } = request;
+const createBlog = async (request, response) => {
+  const { title, author, url } = request.body;
 
-  if (!body.title) {
+  if (!title) {
     return response.status(400).json({ error: 'title is missing' });
   }
-  if (!body.author) {
+  if (!author) {
     return response.status(400).json({ error: 'author is missing' });
   }
-  if (!body.url) {
+  if (!url) {
     return response.status(400).json({ error: 'url is missing' });
   }
 
-  const blogObject = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-  };
+  const blogObject = { title, author, url };
 
-  Blog.create(blogObject)
-    .then((blog) => response.json(blog))
-    .catch((error) => next(error));
-});
+  const blog = Blog.create(blogObject);
 
-blogsRouter.put('/:id', (request, response, next) => {
-  const { body } = request;
+  response.status(201).json(blog);
+};
 
-  if (!body.title) {
+const updateBlog = async (request, response) => {
+  const { title, author, url, likes } = request.body;
+
+  if (!title) {
     return response.status(400).json({ error: 'title is missing' });
   }
-  if (!body.author) {
+  if (!author) {
     return response.status(400).json({ error: 'author is missing' });
   }
-  if (!body.url) {
+  if (!url) {
     return response.status(400).json({ error: 'url is missing' });
   }
 
-  const updatedBlog = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-  };
+  const updatedBlogObject = { title, author, url, likes };
 
-  Blog.findByIdAndUpdate(request.params.id, updatedBlog, {
-    new: true,
-    runValidators: true,
-    context: 'query',
-  })
-    .then((blog) => response.json(blog))
-    .catch((error) => next(error));
-});
+  const updatedBlog = Blog.findByIdAndUpdate(
+    request.params.id,
+    updatedBlogObject,
+    {
+      new: true,
+      runValidators: true,
+      context: 'query',
+    }
+  );
 
-blogsRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndDelete(request.params.id)
-    .then(() => response.status(204).end())
-    .catch((error) => next(error));
-});
+  response.json(updatedBlog);
+};
 
-module.exports = blogsRouter;
+const deleteBlog = async (request, response) => {
+  Blog.findByIdAndDelete(request.params.id);
+  response.status(204).end();
+};
+
+module.exports = {
+  getBlogs,
+  getBlog,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+};
