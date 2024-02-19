@@ -19,7 +19,9 @@ const login = async (request, response) => {
 
   const userForToken = { username, id: user._id };
 
-  const token = jwt.sign(userForToken, process.env.JWT_SECRET);
+  const token = jwt.sign(userForToken, process.env.JWT_SECRET, {
+    expiresIn: 60 * 60, // one hour
+  });
 
   response.status(200).send({ token, username, name: user.name });
 };
