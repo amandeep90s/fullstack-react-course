@@ -5,7 +5,9 @@ require('express-async-errors');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 const mongoose = require('mongoose');
+const authRouter = require('./routes/auth');
 const blogsRouter = require('./routes/blogs');
+const usersRouter = require('./routes/users');
 
 mongoose.set('strictQuery', false);
 
@@ -26,6 +28,8 @@ app.use(express.static('dist'));
 app.use(middleware.requestLogger);
 
 app.use('/api/blogs', blogsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
 
 // handler of requests with unknown endpoint
 app.use(middleware.unknownEndpoint);
