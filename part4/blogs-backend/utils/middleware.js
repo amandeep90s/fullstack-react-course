@@ -45,9 +45,19 @@ const userExtractor = async (request, response, next) => {
   next();
 };
 
+const validateData = (validationSchema) => async (request, response, next) => {
+  try {
+    await validationSchema.validate(request.body, { abortEarly: false });
+    next();
+  } catch (err) {
+    return response.status(400).json({ errors: err.errors }); // Send error response
+  }
+};
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
   userExtractor,
+  validateData,
 };

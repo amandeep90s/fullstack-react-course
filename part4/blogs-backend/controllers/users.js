@@ -2,15 +2,22 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 const getUsers = async (req, res) => {
-  const users = await User.find({}).populate('notes', {
-    content: 1,
-    important: 1,
+  const users = await User.find({}).populate('blogs', {
+    title: 1,
+    author: 1,
+    url: 1,
+    likes: 1,
   });
   res.status(200).json(users);
 };
 
 const getUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate('blogs', {
+    title: 1,
+    author: 1,
+    url: 1,
+    likes: 1,
+  });
   if (user) {
     res.status(200).json(user);
   } else {
