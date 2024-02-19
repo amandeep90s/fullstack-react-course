@@ -21,13 +21,16 @@ const deleteNote = async (request, response) => {
 };
 
 const createNote = async (request, response) => {
-  const { content, important, userId } = request.body;
+  const { content, important } = request.body;
 
   if (!content) {
     return response.status(400).json({ error: 'Content is missing' });
   }
 
-  const user = await User.findById(userId);
+  const user = await User.findById(request.auth.id);
+  if (!user) {
+    return response.status(400).json({ error: 'User does not exist' });
+  }
 
   const note = new Note({
     content: content,
