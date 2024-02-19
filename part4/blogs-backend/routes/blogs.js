@@ -14,7 +14,17 @@ router.post(
   middleware.userExtractor,
   blogController.createBlog
 );
-router.put('/:id', blogController.updateBlog);
-router.delete('/:id', blogController.deleteBlog);
+router.put(
+  '/:id',
+  jwt(config.JWT_TOKEN_AUTH),
+  middleware.userExtractor,
+  blogController.updateBlog
+);
+router.delete(
+  '/:id',
+  jwt(config.JWT_TOKEN_AUTH),
+  middleware.userExtractor,
+  blogController.deleteBlog
+);
 
 module.exports = router;

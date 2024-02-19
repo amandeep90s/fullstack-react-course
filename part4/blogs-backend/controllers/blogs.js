@@ -56,24 +56,49 @@ const updateBlog = async (request, response) => {
     return response.status(400).json({ error: 'url is missing' });
   }
 
-  const updatedBlogObject = { title, author, url, likes };
+  const blog = await Blog.findById(request.params.id);
+  if (!blog) {
+    return response.status(401).json({ error: 'Blog is not found' });
+  }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    request.params.id,
-    updatedBlogObject,
-    {
-      new: true,
-      runValidators: true,
-      context: 'query',
-    }
-  );
+  if (blog.user.toString() === request.user.id.toString()) {
+    const updatedBlogObject = { title, author, url, likes };
 
-  response.json(updatedBlog);
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      request.params.id,
+      updatedBlogObject,
+      {
+        new: true,
+        runValidators: true,
+        context: 'query',
+      }
+    );
+
+    response.json(updatedBlog);
+  } else {
+    response
+      .status(401)
+      .json({ error: 'You are not allowed to update this blog' });
+  }
 };
 
 const deleteBlog = async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id);
-  response.status(204).end();
+  const blog = await Blog.findById(request.params.id);
+
+  if (blog.user.toString() === request.user.id.toString()) {
+    request.user.blogs = request.user.blogs.filter(
+      (b) => b.toString() !== blog.id.toString()
+    );
+
+    await request.user.save();
+
+    await Blog.findByIdAndDelete(request.params.id);
+    response.status(204).end();
+  } else {
+    response
+      .status(401)
+      .json({ error: 'You are not allowed to delete this blog' });
+  }
 };
 
 module.exports = {
