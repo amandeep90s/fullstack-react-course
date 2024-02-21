@@ -1,0 +1,44 @@
+{
+  "notes": [
+    {
+      "id": "1",
+      "content": "HTML is easy",
+      "important": true
+    },
+    {
+      "id": "2",
+      "content": "Browser can execute only JavaScript",
+      "important": false
+    },
+    {
+      "id": "3",
+      "content": "GET and POST are the most important methods of HTTP protocol",
+      "important": true
+    },
+    {
+      "id": "4",
+      "content": "This is my first notebook",
+      "important": true
+    },
+    {
+      "id": "5",
+      "content": "Hello world",
+      "important": true
+    },
+    {
+      "id": "6",
+      "content": "My Name is Aman",
+      "important": false
+    },
+    {
+      "id": "7211",
+      "content": "My wife name is Kawaljit Kaur",
+      "important": true
+    },
+    {
+      "id": "2311",
+      "content": "Hello My Life",
+      "important": true
+    }
+  ]
+}
