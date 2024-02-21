@@ -62,8 +62,10 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const user = await loginService.login({ username, password });
-      setUser(user);
+      const response = await loginService.login({ username, password });
+      noteService.setToken(response.token);
+
+      setUser(response);
       setUsername('');
       setPassword('');
     } catch (error) {
