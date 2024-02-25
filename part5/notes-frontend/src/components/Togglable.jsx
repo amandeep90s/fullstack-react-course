@@ -15,8 +15,6 @@ const Togglable = forwardRef((props, refs) => {
     return { toggleVisibility };
   });
 
-  Togglable.displayName = 'Togglable';
-
   return (
     <div>
       <div style={hideWhenVisible}>
@@ -34,5 +32,7 @@ Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 };
+
+Togglable.displayName = 'Togglable';
 
 export default Togglable;

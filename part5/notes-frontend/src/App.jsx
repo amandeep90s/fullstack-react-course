@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Footer from './components/Footer';
 import Note from './components/Note';
 import Notification from './components/Notification';
@@ -7,7 +7,6 @@ import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import Togglable from './components/Togglable';
 import NoteForm from './components/NoteForm';
-import { useRef } from 'react';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
