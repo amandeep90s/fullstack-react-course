@@ -14,3 +14,18 @@ test('renders content', () => {
   const element = screen.getByText((text) => text.includes(note.content));
   expect(element).toBeDefined();
 });
+
+test('should renders content check with css query selector', () => {
+  const note = {
+    content: 'Component testing is done with react-testing-library',
+    important: true,
+  };
+
+  const { container } = render(<Note note={note} />);
+
+  const div = container.querySelector('.note');
+  expect(div).toHaveTextContent(note.content);
+
+  const element = screen.getByText((text) => text.includes(note.content));
+  expect(element).toBeDefined();
+});
