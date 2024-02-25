@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 
-const Notification = ({ message, status }) => {
-  return <div className={status}>{message}</div>;
+const Notification = ({ message, type }) => {
+  return <p className={type}>{message}</p>;
 };
 
 Notification.propTypes = {
   message: PropTypes.string.isRequired,
-  status: PropTypes.string,
+  type: PropTypes.string,
 };
 
 Notification.defaultProps = {
-  status: 'error',
+  type: 'error',
 };
 
 export default Notification;
