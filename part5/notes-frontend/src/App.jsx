@@ -4,6 +4,7 @@ import Note from './components/Note';
 import Notification from './components/Notification';
 import noteService from './services/notes';
 import loginService from './services/login';
+import LoginForm from './components/LoginForm';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -13,6 +14,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => setNotes(initialNotes));
@@ -91,35 +93,30 @@ const App = () => {
     }
   };
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label htmlFor='username'>Username</label>
-        <input
-          type='text'
-          name='username'
-          id='username'
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          style={{ display: 'block' }}
-        />
-      </div>
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' };
+    const showWhenVisible = { display: loginVisible ? '' : 'none' };
 
-      <div>
-        <label htmlFor='password'>Password</label>
-        <input
-          type='password'
-          name='password'
-          id='password'
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          style={{ display: 'block' }}
-        />
-      </div>
+    return (
+      <>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>Log in</button>
+        </div>
 
-      <input type='submit' value='Login' />
-    </form>
-  );
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleSubmit={handleLogin}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+          />
+
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
+      </>
+    );
+  };
 
   const noteForm = () => (
     <div>
