@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import blogService from './services/blogs';
 import Blog from './components/Blog';
 import loginService from './services/login';
 import Notification from './components/Notification';
-
-const initialBlog = { title: '', url: '', author: '' };
+import Toggable from './components/Togglable';
+import BlogForm from './components/BlogForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,7 +13,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [blog, setBlog] = useState(initialBlog);
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -90,14 +90,14 @@ const App = () => {
     setUser(null);
   };
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault();
+  const handleCreateBlog = async (newBlog) => {
     try {
-      const newBlog = await blogService.create(blog);
-      setBlogs(blogs.concat(newBlog));
-      setBlog(initialBlog);
+      const response = await blogService.create(newBlog);
+      blogFormRef.current.toggleVisibility();
+
+      setBlogs(blogs.concat(response));
       setMessageType('success');
-      setMessage(`a new blog ${blog.title} by ${blog.author} added`);
+      setMessage(`a new blog ${response.title} by ${response.author} added`);
     } catch (error) {
       setMessageType('error');
       setMessage(error.response.data.error);
@@ -108,43 +108,9 @@ const App = () => {
   };
 
   const newBlogForm = () => (
-    <form onSubmit={handleCreateBlog}>
-      <h2>Create new blog</h2>
-      <div>
-        <label htmlFor='title'>Title</label> <br />
-        <input
-          type='text'
-          id='title'
-          name='title'
-          value={blog.title}
-          onChange={({ target }) => setBlog({ ...blog, title: target.value })}
-          placeholder='Enter title'
-        />
-      </div>
-      <div>
-        <label htmlFor='author'>Author</label> <br />
-        <input
-          type='text'
-          id='author'
-          name='author'
-          value={blog.author}
-          onChange={({ target }) => setBlog({ ...blog, author: target.value })}
-          placeholder='Enter author'
-        />
-      </div>
-      <div>
-        <label htmlFor='url'>Url</label> <br />
-        <input
-          type='text'
-          id='url'
-          name='url'
-          value={blog.url}
-          onChange={({ target }) => setBlog({ ...blog, url: target.value })}
-          placeholder='Enter url'
-        />
-      </div>
-      <button type='submit'>Create</button>
-    </form>
+    <Toggable buttonLabel='New Blog' ref={blogFormRef}>
+      <BlogForm createBlog={handleCreateBlog} />
+    </Toggable>
   );
 
   return user === null ? (
