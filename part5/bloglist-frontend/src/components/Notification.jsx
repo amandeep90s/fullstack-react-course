@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 const Notification = ({ message, type }) => {
-  return <p className={type}>{message}</p>;
+  return <p className={`status ${type}`}>{message}</p>;
 };
 
 Notification.propTypes = {

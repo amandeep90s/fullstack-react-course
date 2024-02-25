@@ -3,7 +3,7 @@ h1 {
   font-style: italic;
 }
 
-p {
+p.status {
   background-color: lightgray;
   font-size: 20px;
   border-style: solid;

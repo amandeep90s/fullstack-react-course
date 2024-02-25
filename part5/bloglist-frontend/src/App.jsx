@@ -99,16 +99,50 @@ const App = () => {
       setMessageType('success');
       setMessage(`a new blog ${response.title} by ${response.author} added`);
     } catch (error) {
-      setMessageType('error');
-      setMessage(error.response.data.error);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      handleError(error.response.data.error);
     }
   };
 
+  const handleBlogUpdate = async (id, updatedBlog) => {
+    try {
+      const response = await blogService.update(id, updatedBlog);
+
+      const newBlogs = blogs.map((blog) =>
+        blog.id.toString() === response.id.toString() ? response : blog
+      );
+      setBlogs(newBlogs);
+    } catch (error) {
+      handleError(error.response.data.error);
+    }
+  };
+
+  const handleBlogDelete = async (deletedBlog) => {
+    try {
+      if (
+        confirm(`Remove ${deletedBlog.title} by ${deletedBlog.author}`) === true
+      ) {
+        await blogService.destroy(deletedBlog.id);
+
+        const newBlogs = blogs.filter(
+          (blog) => blog.id.toString() !== deletedBlog.id.toString()
+        );
+        setBlogs(newBlogs);
+      }
+    } catch (error) {
+      handleError(error.response.data.error);
+    }
+  };
+
+  const handleError = (error) => {
+    setMessageType('error');
+    setMessage(error);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  };
+
   const newBlogForm = () => (
-    <Toggable buttonLabel='New Blog' ref={blogFormRef}>
+    <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
       <BlogForm createBlog={handleCreateBlog} />
     </Toggable>
   );
@@ -124,7 +158,12 @@ const App = () => {
       </div>
       {newBlogForm()}
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateBlog={handleBlogUpdate}
+          deleteBlog={handleBlogDelete}
+        />
       ))}
     </div>
   );

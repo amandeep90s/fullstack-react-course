@@ -56,12 +56,15 @@ const updateBlog = async (request, response) => {
     return response.status(400).json({ error: 'url is missing' });
   }
 
-  const blog = await Blog.findById(request.params.id);
+  const blog = await Blog.findById(request.params.id).populate('user', {
+    name: 1,
+    username: 1,
+  });
   if (!blog) {
     return response.status(401).json({ error: 'Blog is not found' });
   }
 
-  if (blog.user.toString() === request.user.id.toString()) {
+  if (blog?.user?.id?.toString() === request.user.id.toString()) {
     const updatedBlogObject = { title, author, url, likes };
 
     const updatedBlog = await Blog.findByIdAndUpdate(
