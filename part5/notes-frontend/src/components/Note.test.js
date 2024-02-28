@@ -12,6 +12,8 @@ test('renders content', () => {
   render(<Note note={note} />);
 
   const element = screen.getByText((text) => text.includes(note.content));
+  // Below method is used to display the rendered component in terminal
+  // screen.debug(element);
   expect(element).toBeDefined();
 });
 
