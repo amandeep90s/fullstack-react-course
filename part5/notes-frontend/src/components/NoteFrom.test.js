@@ -8,14 +8,11 @@ test('<NoteForm /> updates parent state and calls submit', async () => {
   const createNote = jest.fn();
   const user = userEvent.setup();
 
-  const { container } = render(<NoteForm createNote={createNote} />);
-
-  // Get input field with query selector
-  const input = container.querySelector('#note-input');
+  render(<NoteForm createNote={createNote} />);
 
   // Get input field with placeholder
-  // const input = screen.getByPlaceholderText('write note content here');
-  // const input = screen.getByRole('textbox');
+  const input = screen.getByPlaceholderText('write note content here');
+
   const sendButton = screen.getByText('save');
 
   await user.type(input, 'testing a form...');

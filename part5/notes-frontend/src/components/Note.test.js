@@ -18,6 +18,46 @@ test('renders content', () => {
   expect(element).toBeDefined();
 });
 
+test('renders content part 2', () => {
+  const note = {
+    content: 'Does not work anymore :(',
+    important: true,
+  };
+
+  render(<Note note={note} />);
+
+  const element = screen.getByText('Does not work anymore :(', {
+    exact: false,
+  });
+
+  expect(element).toBeDefined();
+});
+
+test('renders content part 3', () => {
+  const note = {
+    content: 'Does not work anymore :(',
+    important: true,
+  };
+
+  render(<Note note={note} />);
+
+  const element = screen.findByText('Does not work anymore :(');
+
+  expect(element).toBeDefined();
+});
+
+test('does not render this', () => {
+  const note = {
+    content: 'This is a reminder',
+    important: true,
+  };
+
+  render(<Note note={note} />);
+
+  const element = screen.queryByText('do not want this thing to be rendered');
+  expect(element).toBeNull();
+});
+
 test('should renders content check with css query selector', () => {
   const note = {
     content: 'Component testing is done with react-testing-library',
