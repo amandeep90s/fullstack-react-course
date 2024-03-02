@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const authRouter = require('./routes/auth');
 const notesRouter = require('./routes/notes');
 const usersRouter = require('./routes/users');
+const testingRouter = require('./routes/testing');
 
 mongoose.set('strictQuery', false);
 
@@ -30,6 +31,10 @@ app.use(middleware.requestLogger);
 app.use('/api/notes', notesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
+
+if (config.NODE_ENV === 'test') {
+  app.use('/api/testing', testingRouter);
+}
 
 // handler of requests with unknown endpoint
 app.use(middleware.unknownEndpoint);
