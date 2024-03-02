@@ -1,6 +1,4 @@
 describe('Note app', function () {
-  const serverUrl = 'http://localhost:3001/api';
-  const clientUrl = 'http://localhost:5173';
   const user = {
     name: 'Amandeep Singh',
     username: 'amandeep',
@@ -9,12 +7,11 @@ describe('Note app', function () {
 
   beforeEach(function () {
     // Clear DB
-    cy.request('POST', `${serverUrl}/testing/reset`);
-
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`);
     // Add new user
-    cy.request('POST', `${serverUrl}/users`, user);
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user);
 
-    cy.visit(clientUrl);
+    cy.visit('');
   });
 
   it('front page can be opened', function () {
@@ -28,16 +25,36 @@ describe('Note app', function () {
     cy.contains('login').click();
   });
 
-  it('user can login', function () {
-    cy.contains('login').click();
-    cy.get('#username').type(user.username);
-    cy.get('#password').type(user.password);
-    cy.get('#login-button').click();
+  describe('when logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: user.username, password: user.password });
+    });
 
-    cy.contains(`${user.name} logged in`);
+    it('a new note can be created', function () {
+      const note = 'a note created by cypress';
+
+      cy.contains('New note').click();
+      cy.get('#note-input').type(note);
+      cy.contains('save').click();
+      cy.contains(note);
+    });
+
+    describe('and a note exists', function () {
+      const note = { content: 'another note cypress', important: true };
+
+      beforeEach(function () {
+        cy.createNote(note);
+      });
+
+      it('it can be made not important', function () {
+        cy.contains(note.content).contains('make note important').click();
+
+        cy.contains(note.content).contains('make important');
+      });
+    });
   });
 
-  it.only('login fails with wrong password', function () {
+  it('login fails with wrong password', function () {
     cy.contains('login').click();
     cy.get('#username').type(user.username);
     cy.get('#password').type('wrong password');
@@ -50,39 +67,5 @@ describe('Note app', function () {
 
     cy.get('html').should('not.contain', `${user.name} logged in`);
     cy.contains(`${user.name} logged in`).should('not.exist');
-  });
-
-  describe('when logged in', function () {
-    beforeEach(function () {
-      cy.contains('login').click();
-      cy.get('#username').type(user.username);
-      cy.get('#password').type(user.password);
-      cy.get('#login-button').click();
-    });
-
-    it('a new note can be created', function () {
-      const note = 'a note created by cypress';
-
-      cy.contains('new note').click();
-      cy.get('#note-input').type(note);
-      cy.contains('save').click();
-      cy.contains(note);
-    });
-
-    describe('and a note exists', function () {
-      const note = 'another note cypress';
-
-      beforeEach(function () {
-        cy.contains('new note').click();
-        cy.get('input').type(note);
-        cy.contains('save').click();
-      });
-
-      it('it can be made not important', function () {
-        cy.contains(note).contains('make note important').click();
-
-        cy.contains(note).contains('make important');
-      });
-    });
   });
 });
