@@ -1,4 +1,4 @@
-import { shape, string, number } from 'prop-types';
+import { shape, func, string, number } from 'prop-types';
 import { useState, memo } from 'react';
 
 const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
@@ -13,10 +13,14 @@ const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
   const toggleVisibility = () => setVisible(!visible);
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog-content'>
       <p>
-        {blog.title}
-        <button onClick={toggleVisibility} style={{ marginLeft: 10 }}>
+        {blog.title} - {blog.author}
+        <button
+          className='showHideButton'
+          onClick={toggleVisibility}
+          style={{ marginLeft: 10 }}
+        >
           {visible ? 'Hide' : 'View'}
         </button>
         {visible && (
@@ -29,6 +33,7 @@ const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
             <br />
             Likes: {blog.likes}{' '}
             <button
+              className='updateButton'
               onClick={() =>
                 updateBlog(blog.id, { ...blog, likes: blog.likes + 1 })
               }
@@ -38,7 +43,9 @@ const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
             <br />
             Author: {blog.author}
             <br />
-            <button onClick={() => deleteBlog(blog)}>Remove</button>
+            <button className='deleteButton' onClick={() => deleteBlog(blog)}>
+              Remove
+            </button>
           </>
         )}
       </p>
@@ -56,6 +63,8 @@ Blog.propTypes = {
     likes: number,
     url: string,
   }),
+  updateBlog: func,
+  deleteBlog: func,
 };
 
 Blog.displayName = 'Blog';
