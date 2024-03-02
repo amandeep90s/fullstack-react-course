@@ -58,7 +58,6 @@ describe('Note app', function () {
 
     describe('and several notes exist', () => {
       beforeEach(function () {
-        cy.login({ username: user.username, password: user.password });
         cy.createNote({ content: 'first note', important: false });
         cy.createNote({ content: 'second note', important: false });
         cy.createNote({ content: 'three note', important: false });
