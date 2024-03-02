@@ -49,7 +49,9 @@ const BlogForm = ({ createBlog }) => {
           placeholder='Enter url'
         />
       </div>
-      <button type='submit'>Create</button>
+      <button className='submitButton' type='submit'>
+        Create
+      </button>
     </form>
   );
 };
