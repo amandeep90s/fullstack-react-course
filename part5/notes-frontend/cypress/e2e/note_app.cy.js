@@ -47,9 +47,35 @@ describe('Note app', function () {
       });
 
       it('it can be made not important', function () {
-        cy.contains(note.content).contains('make note important').click();
+        cy.contains(note.content).parent().find('button').click();
 
-        cy.contains(note.content).contains('make important');
+        cy.contains(note.content)
+          .parent()
+          .find('button')
+          .contains('make important');
+      });
+    });
+
+    describe('and several notes exist', () => {
+      beforeEach(function () {
+        cy.login({ username: user.username, password: user.password });
+        cy.createNote({ content: 'first note', important: false });
+        cy.createNote({ content: 'second note', important: false });
+        cy.createNote({ content: 'three note', important: false });
+      });
+
+      it('one of those can be made important', function () {
+        cy.contains('second note').parent().find('button').click();
+        cy.contains('second note')
+          .parent()
+          .find('button')
+          .should('contain', 'make note important');
+      });
+
+      it('one of those can be made important 2', function () {
+        cy.contains('second note').parent().find('button').as('theButton');
+        cy.get('@theButton').click();
+        cy.get('@theButton').should('contain', 'make note important');
       });
     });
   });
