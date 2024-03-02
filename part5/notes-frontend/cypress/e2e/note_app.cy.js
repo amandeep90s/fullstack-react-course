@@ -37,6 +37,21 @@ describe('Note app', function () {
     cy.contains(`${user.name} logged in`);
   });
 
+  it.only('login fails with wrong password', function () {
+    cy.contains('login').click();
+    cy.get('#username').type(user.username);
+    cy.get('#password').type('wrong password');
+    cy.get('#login-button').click();
+
+    cy.get('.error')
+      .should('contain', 'Wrong Credentials')
+      .and('have.css', 'color', 'rgb(255, 0, 0)')
+      .and('have.css', 'border-style', 'solid');
+
+    cy.get('html').should('not.contain', `${user.name} logged in`);
+    cy.contains(`${user.name} logged in`).should('not.exist');
+  });
+
   describe('when logged in', function () {
     beforeEach(function () {
       cy.contains('login').click();
