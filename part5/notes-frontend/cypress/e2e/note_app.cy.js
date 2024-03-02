@@ -22,4 +22,22 @@ describe('Note app', function () {
 
     cy.contains('Amandeep Singh logged in');
   });
+
+  describe('when logged in', function () {
+    beforeEach(function () {
+      cy.contains('login').click();
+      cy.get('#username').type('amandeep');
+      cy.get('#password').type('Aman@1234');
+      cy.get('#login-button').click();
+    });
+
+    it('a new note can be created', function () {
+      const note = 'a note created by cypress';
+
+      cy.contains('new note').click();
+      cy.get('#note-input').type(note);
+      cy.contains('save').click();
+      cy.contains(note);
+    });
+  });
 });
