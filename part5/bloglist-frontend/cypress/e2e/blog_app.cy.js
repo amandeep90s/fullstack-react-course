@@ -101,5 +101,37 @@ describe('Blog app', () => {
       cy.get('.showHideButton').click();
       cy.get('.deleteButton').should('be.visible');
     });
+
+    it('orders blogs by likes, with the most liked blog being first', () => {
+      // Create three blogs
+      cy.createBlog({ ...blog, title: 'First Blog', likes: 500 });
+
+      // Click .showHideButton button on the first blog to display the like button
+      cy.get('.blog-content').eq(0).find('.showHideButton').click();
+
+      // Click like button on the first blog multiple times
+      cy.get('.blog-content')
+        .eq(0)
+        .find('.updateButton')
+        .click()
+        .click()
+        .click();
+
+      cy.get('.blog-content').eq(1).find('.showHideButton').click();
+      cy.get('.blog-content')
+        .eq(1)
+        .find('.likes-count')
+        .then(($likesCount) => {
+          const likesOfSecondBlog = parseInt($likesCount.text());
+
+          cy.get('.blog-content')
+            .eq(0)
+            .find('.likes-count')
+            .then(($likesCountFirst) => {
+              const likesOfFirstBlog = parseInt($likesCountFirst.text());
+              expect(likesOfSecondBlog).to.be.lessThan(likesOfFirstBlog);
+            });
+        });
+    });
   });
 });

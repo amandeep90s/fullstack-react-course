@@ -31,7 +31,7 @@ const Blog = memo(({ blog, updateBlog, deleteBlog, user }) => {
               {blog.url}
             </a>
             <br />
-            Likes: {blog.likes}{' '}
+            Likes: <span className='likes-count'>{blog.likes}</span>
             <button
               className='updateButton'
               onClick={() =>

@@ -1,10 +1,12 @@
 const Blog = require('../models/blog');
 
 const getBlogs = async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', {
-    name: 1,
-    username: 1,
-  });
+  const blogs = await Blog.find({})
+    .populate('user', {
+      name: 1,
+      username: 1,
+    })
+    .sort({ likes: -1 });
   response.status(200).json(blogs);
 };
 
@@ -21,7 +23,7 @@ const getBlog = async (request, response) => {
 };
 
 const createBlog = async (request, response) => {
-  const { title, author, url } = request.body;
+  const { title, author, url, likes } = request.body;
 
   if (!title) {
     return response.status(400).json({ error: 'title is missing' });
@@ -33,7 +35,13 @@ const createBlog = async (request, response) => {
     return response.status(400).json({ error: 'url is missing' });
   }
 
-  const blogObject = { title, author, url, user: request.user.id };
+  const blogObject = {
+    title,
+    author,
+    url,
+    likes: likes ?? 0,
+    user: request.user.id,
+  };
 
   const blog = await Blog.create(blogObject);
 
