@@ -1,16 +1,17 @@
 {
   "name": "blogs-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Blogs App Backend",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test node --test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start:test": "cross-env NODE_ENV=test nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Amandeep Singh",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
