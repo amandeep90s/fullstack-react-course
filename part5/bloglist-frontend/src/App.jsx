@@ -121,7 +121,10 @@ const App = () => {
       <h1>Blogs</h1>
       {message && <Notification message={message} type={messageType} />}
       <div style={{ marginBottom: '1rem' }}>
-        {user.name} logged in <button onClick={handleLogout}>Logout</button>
+        {user.name} logged in{' '}
+        <button id='logoutButton' onClick={handleLogout}>
+          Logout
+        </button>
       </div>
       {newBlogForm()}
       {blogs.map((blog) => (

@@ -52,20 +52,43 @@ describe('Blog app', () => {
   describe('When logged in', function () {
     beforeEach(function () {
       cy.login({ username: user.username, password: user.password });
+      cy.createBlog(blog);
     });
 
     it('A blog can be created', function () {
-      cy.createBlog(blog);
       cy.get('.blog-content')
         .should('contain', blog.title)
         .should('contain', blog.author);
     });
 
     it('A blog can be updated', function () {
-      cy.createBlog(blog);
       cy.get('.showHideButton').click();
       cy.get('.updateButton').click();
       cy.get('.blog-content').should('contain', 'Likes: 1');
+    });
+
+    it('Only valid user can delete the blog', function () {
+      const newUser = {
+        name: 'Mandeep Singh',
+        username: 'mandeep',
+        password: 'Mand@1234',
+      };
+
+      cy.request('POST', `${Cypress.env('BACKEND')}/users`, newUser);
+      cy.login({ username: newUser.username, password: newUser.password });
+
+      cy.get('.showHideButton').click();
+      cy.get('.deleteButton').click();
+      cy.get('.error')
+        .should('contain', 'You are not allowed to delete this blog')
+        .and('have.css', 'color', 'rgb(255, 0, 0)')
+        .and('have.css', 'border-style', 'solid');
+
+      cy.get('#logoutButton').click();
+      cy.login({ username: user.username, password: user.password });
+      cy.get('.showHideButton').click();
+      cy.get('.deleteButton').click();
+      cy.get('.blog-content').should('not.exist');
     });
   });
 });
