@@ -48,4 +48,17 @@ describe('Blog app', () => {
       cy.contains(`${user.name} logged in`).should('not.exist');
     });
   });
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: user.username, password: user.password });
+    });
+
+    it('A blog can be created', function () {
+      cy.createBlog(blog);
+      cy.get('.blog-content')
+        .should('contain', blog.title)
+        .should('contain', blog.author);
+    });
+  });
 });

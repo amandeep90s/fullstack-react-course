@@ -38,9 +38,11 @@ Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
     url: `${Cypress.env('BACKEND')}/blogs`,
     method: 'POST',
     body: { title, author, url, likes },
-    headers: `Bearer ${
-      JSON.parse(localStorage.get('loggedBlogAppUser')).token
-    }`,
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('loggedBlogAppUser')).token
+      }`,
+    },
   });
 
   cy.visit('');
