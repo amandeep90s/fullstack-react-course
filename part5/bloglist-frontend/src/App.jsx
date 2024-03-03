@@ -129,6 +129,7 @@ const App = () => {
       {newBlogForm()}
       {blogs.map((blog) => (
         <Blog
+          user={user}
           key={blog.id}
           blog={blog}
           updateBlog={handleBlogUpdate}

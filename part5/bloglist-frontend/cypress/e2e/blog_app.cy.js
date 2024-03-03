@@ -76,19 +76,30 @@ describe('Blog app', () => {
 
       cy.request('POST', `${Cypress.env('BACKEND')}/users`, newUser);
       cy.login({ username: newUser.username, password: newUser.password });
-
       cy.get('.showHideButton').click();
-      cy.get('.deleteButton').click();
-      cy.get('.error')
-        .should('contain', 'You are not allowed to delete this blog')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
-        .and('have.css', 'border-style', 'solid');
-
+      cy.get('.deleteButton').should('not.exist');
       cy.get('#logoutButton').click();
       cy.login({ username: user.username, password: user.password });
       cy.get('.showHideButton').click();
       cy.get('.deleteButton').click();
       cy.get('.blog-content').should('not.exist');
+    });
+
+    it('Only valid user can see delete button', function () {
+      const newUser = {
+        name: 'Mandeep Singh',
+        username: 'mandeep',
+        password: 'Mand@1234',
+      };
+
+      cy.request('POST', `${Cypress.env('BACKEND')}/users`, newUser);
+      cy.login({ username: newUser.username, password: newUser.password });
+      cy.get('.showHideButton').click();
+      cy.get('.deleteButton').should('not.exist');
+      cy.get('#logoutButton').click();
+      cy.login({ username: user.username, password: user.password });
+      cy.get('.showHideButton').click();
+      cy.get('.deleteButton').should('be.visible');
     });
   });
 });
