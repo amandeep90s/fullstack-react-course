@@ -5,13 +5,12 @@ import loginService from './services/login';
 import Notification from './components/Notification';
 import Toggable from './components/Togglable';
 import BlogForm from './components/BlogForm';
+import LoginForm from './components/LoginForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('error');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const blogFormRef = useRef();
 
@@ -28,10 +27,9 @@ const App = () => {
     }
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (loginObject) => {
     try {
-      const loginResponse = await loginService.login({ username, password });
+      const loginResponse = await loginService.login(loginObject);
 
       window.localStorage.setItem(
         'loggedBlogAppUser',
@@ -41,8 +39,6 @@ const App = () => {
       blogService.setToken(loginResponse.token);
 
       setUser(loginResponse);
-      setUsername('');
-      setPassword('');
     } catch (error) {
       setMessageType('error');
       setMessage('Wrong username or password');
@@ -53,36 +49,7 @@ const App = () => {
   };
 
   const loginForm = () => (
-    <form onSubmit={handleSubmit}>
-      <h1>User Login</h1>
-      {message && <Notification message={message} />}
-      <div>
-        <label htmlFor='username'>Username</label> <br />
-        <input
-          type='text'
-          id='username'
-          name='username'
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder='Enter username'
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor='password'>Password</label> <br />
-        <input
-          type='password'
-          id='password'
-          name='password'
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder='Enter password'
-          required
-        />
-      </div>
-      <br />
-      <button type='submit'>Login</button>
-    </form>
+    <LoginForm message={message} loginAttempt={handleSubmit} user={user} />
   );
 
   const handleLogout = () => {
@@ -154,11 +121,15 @@ const App = () => {
       <h1>Blogs</h1>
       {message && <Notification message={message} type={messageType} />}
       <div style={{ marginBottom: '1rem' }}>
-        {user.name} logged in <button onClick={handleLogout}>Logout</button>
+        {user.name} logged in{' '}
+        <button id='logoutButton' onClick={handleLogout}>
+          Logout
+        </button>
       </div>
       {newBlogForm()}
       {blogs.map((blog) => (
         <Blog
+          user={user}
           key={blog.id}
           blog={blog}
           updateBlog={handleBlogUpdate}

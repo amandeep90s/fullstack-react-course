@@ -40,7 +40,7 @@ const LoginForm = ({ loginAttempt }) => {
         />
       </div>
 
-      <input type='submit' value='Login' />
+      <input id='login-button' type='submit' value='Login' />
     </form>
   );
 };

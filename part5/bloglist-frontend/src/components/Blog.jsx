@@ -1,7 +1,7 @@
-import { shape, func, string, number } from 'prop-types';
+import { shape, func, string, number, object } from 'prop-types';
 import { useState, memo } from 'react';
 
-const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
+const Blog = memo(({ blog, updateBlog, deleteBlog, user }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -31,7 +31,7 @@ const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
               {blog.url}
             </a>
             <br />
-            Likes: {blog.likes}{' '}
+            Likes: <span className='likes-count'>{blog.likes}</span>
             <button
               className='updateButton'
               onClick={() =>
@@ -43,9 +43,11 @@ const Blog = memo(({ blog, updateBlog, deleteBlog }) => {
             <br />
             Author: {blog.author}
             <br />
-            <button className='deleteButton' onClick={() => deleteBlog(blog)}>
-              Remove
-            </button>
+            {user?.id?.toString() === blog?.user?.id?.toString() && (
+              <button className='deleteButton' onClick={() => deleteBlog(blog)}>
+                Remove
+              </button>
+            )}
           </>
         )}
       </p>
@@ -65,6 +67,7 @@ Blog.propTypes = {
   }),
   updateBlog: func,
   deleteBlog: func,
+  user: object,
 };
 
 Blog.displayName = 'Blog';
