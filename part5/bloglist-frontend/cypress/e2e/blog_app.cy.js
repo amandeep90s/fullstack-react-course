@@ -60,5 +60,12 @@ describe('Blog app', () => {
         .should('contain', blog.title)
         .should('contain', blog.author);
     });
+
+    it('A blog can be updated', function () {
+      cy.createBlog(blog);
+      cy.get('.showHideButton').click();
+      cy.get('.updateButton').click();
+      cy.get('.blog-content').should('contain', 'Likes: 1');
+    });
   });
 });
