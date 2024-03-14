@@ -13,9 +13,23 @@ const notesSlice = createSlice({
     addNote: (state, action) => {
       state.notes.push(action.payload);
     },
+    toggleImportance: (state, action) => {
+      const id = action.payload.id;
+      const noteToChange = state.notes.find((item) => item.id === id);
+      const changednote = {
+        ...noteToChange,
+        important: !noteToChange.important,
+      };
+
+      state.notes = state.notes.map((note) =>
+        note.id !== id ? note : changednote
+      );
+
+      return state;
+    },
   },
 });
 
-export const { addNote } = notesSlice.actions;
+export const { addNote, toggleImportance } = notesSlice.actions;
 
 export default notesSlice.reducer;
