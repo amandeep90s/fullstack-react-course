@@ -1,0 +1,23 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { updateVote } from '../redux/features/anecdoteSlice';
+
+const AnecdostList = () => {
+  const anecdotes = useSelector((state) => state.anecdotes);
+  const dispatch = useDispatch();
+
+  const vote = (id) => {
+    dispatch(updateVote({ id }));
+  };
+
+  return anecdotes.map((anecdote) => (
+    <div key={anecdote.id}>
+      <div>{anecdote.content}</div>
+      <div>
+        has {anecdote.votes}
+        <button onClick={() => vote(anecdote.id)}>vote</button>
+      </div>
+    </div>
+  ));
+};
+
+export default AnecdostList;
