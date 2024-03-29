@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import counterSlice, { good } from './counterSlice';
+import counterSlice, { bad, good, ok, zero } from './counterSlice';
 
 describe('unicafe reducer', () => {
   const initialState = {
@@ -24,6 +24,57 @@ describe('unicafe reducer', () => {
       })
     ).toEqual({
       good: 1,
+      ok: 0,
+      bad: 0,
+    });
+  });
+
+  test('bad is incremented', () => {
+    const state = initialState;
+
+    deepFreeze(state);
+
+    expect(
+      counterSlice.reducer(initialState, {
+        type: bad.type,
+        payload: initialState,
+      })
+    ).toEqual({
+      good: 0,
+      ok: 0,
+      bad: 1,
+    });
+  });
+
+  test('ok is incremented', () => {
+    const state = initialState;
+
+    deepFreeze(state);
+
+    expect(
+      counterSlice.reducer(initialState, {
+        type: ok.type,
+        payload: initialState,
+      })
+    ).toEqual({
+      good: 0,
+      ok: 1,
+      bad: 0,
+    });
+  });
+
+  test('state is reset', () => {
+    const state = initialState;
+
+    deepFreeze(state);
+
+    expect(
+      counterSlice.reducer(initialState, {
+        type: zero.type,
+        payload: initialState,
+      })
+    ).toEqual({
+      good: 0,
       ok: 0,
       bad: 0,
     });
