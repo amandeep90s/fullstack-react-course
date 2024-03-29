@@ -1,34 +1,43 @@
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNote } from './redux/features/notesSlice';
+import { addNote, toggleImportance } from './redux/features/notesSlice';
+
+const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
 const App = () => {
   const dispatch = useDispatch();
   const { notes } = useSelector((state) => state.notes);
 
-  useEffect(() => {
+  const addNewNote = (event) => {
+    event.preventDefault();
+    const content = event.target.note.value;
+    event.target.note.value = '';
+
     dispatch(
       addNote({
-        content: 'the app state is in redux store',
-        important: true,
-        id: Date.now(),
-      })
-    );
-    dispatch(
-      addNote({
-        content: 'state changes are made with actions',
+        content,
         important: false,
-        id: Date.now(),
+        id: generateId(),
       })
     );
-  }, [dispatch]);
+  };
+
+  const toggleNoteImportance = (id) => {
+    dispatch(toggleImportance({ id }));
+  };
 
   return (
     <div>
+      <form onSubmit={addNewNote}>
+        <input type='text' name='note' />
+        <button type='submit'>Add note</button>
+      </form>
       <ul>
         {notes.map((note) => (
           <li key={note.id}>
-            {note.content} <strong>{note.important ? 'important' : ''}</strong>
+            {note.content}
+            <button type='button' onClick={() => toggleNoteImportance(note.id)}>
+              <strong>{note.important ? 'Important' : 'Not Important'}</strong>
+            </button>
           </li>
         ))}
       </ul>
