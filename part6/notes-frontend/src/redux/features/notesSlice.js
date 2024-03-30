@@ -18,7 +18,7 @@ const notesSlice = createSlice({
   initialState,
   reducers: {
     addNote: (state, action) => {
-      return [...state, action.payload];
+      state.push(action.payload);
     },
     toggleImportance: (state, action) => {
       const id = action.payload.id;
