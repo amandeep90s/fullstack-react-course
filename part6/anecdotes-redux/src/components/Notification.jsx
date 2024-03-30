@@ -10,11 +10,7 @@ const Notification = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      dispatch(resetNotification(''));
-
-      // return () => {
-      //   clearInterval(notification);
-      // };
+      dispatch(resetNotification());
     }, 5000);
   }, [notification, dispatch]);
 
