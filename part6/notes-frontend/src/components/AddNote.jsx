@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { addNote } from '../redux/features/notesSlice';
-import noteService from '../services/notes';
 
 const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
@@ -12,9 +11,7 @@ const AddNote = () => {
     event.preventDefault();
     const content = event.target.note.value;
     event.target.note.value = '';
-
-    const newNote = await noteService.createNote(content);
-    dispatch(addNote(newNote));
+    dispatch(addNote(content));
   };
 
   return (
