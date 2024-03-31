@@ -7,18 +7,11 @@ const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 const AddNote = () => {
   const dispatch = useDispatch();
 
-  const addNewNote = (event) => {
+  const addNewNote = async (event) => {
     event.preventDefault();
     const content = event.target.note.value;
     event.target.note.value = '';
-
-    dispatch(
-      addNote({
-        content,
-        important: false,
-        id: generateId(),
-      })
-    );
+    dispatch(addNote(content));
   };
 
   return (
