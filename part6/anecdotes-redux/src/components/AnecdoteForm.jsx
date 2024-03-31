@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { addAnecdote, getId } from '../redux/features/anecdoteSlice';
+import { setNotification } from '../redux/features/notificationSlice';
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const AnecdoteForm = () => {
     };
 
     dispatch(addAnecdote(anecdote));
+    dispatch(setNotification(`${anecdote.content} is added`));
 
     event.target.content.value = '';
   };
