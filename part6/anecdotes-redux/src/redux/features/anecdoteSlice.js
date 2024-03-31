@@ -8,31 +8,16 @@ const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState,
   reducers: {
-    updateVote: (state, action) => {
-      const { id } = action.payload;
-      const anecdoteToChange = state.find((item) => item.id === id);
-      const updatedAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1,
-      };
-
-      state = state.map((item) => (item.id === id ? updatedAnecdote : item));
-
-      setNotification(`You voted ${updatedAnecdote.content}`);
-
-      return state.sort((a, b) => b.votes - a.votes);
-    },
     appendAnecdote: (state, action) => {
       state.push(action.payload);
     },
     setAnecdotes: (state, action) => {
-      return action.payload;
+      return action.payload.sort((a, b) => b.votes - a.votes);
     },
   },
 });
 
-export const { updateVote, appendAnecdote, setAnecdotes } =
-  anecdoteSlice.actions;
+export const { appendAnecdote, setAnecdotes } = anecdoteSlice.actions;
 
 export const initializeAnecdotes = () => {
   return async (dispatch) => {
@@ -45,6 +30,30 @@ export const addAnecdote = (content) => {
   return async (dispatch) => {
     const newAnecdote = await anecdoteService.createAnecdote(content);
     dispatch(appendAnecdote(newAnecdote));
+    dispatch(setNotification(`${newAnecdote.content} is added`));
+  };
+};
+
+// Async thunk for updating votes
+export const updateVote = (id) => {
+  return async (dispatch) => {
+    const anecdotes = await anecdoteService.getAll();
+    const anecdoteToChange = anecdotes.find((item) => item.id === id);
+    const updatedAnecdote = {
+      ...anecdoteToChange,
+      votes: anecdoteToChange.votes + 1,
+    };
+
+    await anecdoteService.updateAnecdote(id, updatedAnecdote);
+
+    const newAnecdotes = anecdotes.map((item) =>
+      item.id === id ? updatedAnecdote : item
+    );
+
+    setNotification(`You voted ${updatedAnecdote.content}`);
+
+    dispatch(setAnecdotes(newAnecdotes));
+    dispatch(setNotification(`You voted '${updatedAnecdote.content}'`));
   };
 };
 
