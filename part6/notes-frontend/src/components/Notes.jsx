@@ -5,10 +5,12 @@ import { toggleImportance } from '../redux/features/notesSlice';
 const Note = ({ note, handleClick }) => {
   return (
     <li>
-      {note.content}
-      <button type='button' onClick={handleClick}>
-        <strong>{note.important ? 'Important' : 'Not Important'}</strong>
-      </button>
+      <p>
+        {note.content}
+        <button type='button' onClick={handleClick}>
+          <strong>{note.important ? 'Important' : 'Not Important'}</strong>
+        </button>
+      </p>
     </li>
   );
 };
