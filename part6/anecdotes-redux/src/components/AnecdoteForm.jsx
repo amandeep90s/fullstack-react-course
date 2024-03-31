@@ -1,21 +1,18 @@
 import { useDispatch } from 'react-redux';
-import { addAnecdote, getId } from '../redux/features/anecdoteSlice';
+import { addAnecdote } from '../redux/features/anecdoteSlice';
 import { setNotification } from '../redux/features/notificationSlice';
+import anecdoteService from '../services/anecdotes';
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const anecdote = {
-      content: event.target.content.value,
-      id: getId(),
-      votes: 0,
-    };
+    const content = event.target.content.value;
+    const newAnecdote = await anecdoteService.createAnecdote(content);
 
-    dispatch(addAnecdote(anecdote));
-    dispatch(setNotification(`${anecdote.content} is added`));
-
+    dispatch(addAnecdote(newAnecdote));
+    dispatch(setNotification(`${newAnecdote.content} is added`));
     event.target.content.value = '';
   };
 
