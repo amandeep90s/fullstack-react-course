@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useQuery } from '@tanstack/react-query';
+import AnecdoteForm from './components/AnecdoteForm';
+import Notification from './components/Notification';
+import { getAnecdotes } from './requests';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const handleVote = (anecdote) => {
+    console.log('vote');
+  };
+
+  const { status, data, error } = useQuery({
+    queryKey: ['anecdotes'],
+    queryFn: getAnecdotes,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
+
+  if (status === 'pending') {
+    return <div>Loading data...</div>;
+  }
+
+  if (status === 'error') {
+    return (
+      <div>
+        {error.message}: Anecdote service not available due to problems in
+        server
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h3>Anecdote app</h3>
 
-export default App
+      <Notification />
+      <AnecdoteForm />
+
+      {data.map((anecdote) => (
+        <div key={anecdote.id}>
+          <div>{anecdote.content}</div>
+          <div>
+            has {anecdote.votes}
+            <button onClick={() => handleVote(anecdote)}>vote</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default App;
