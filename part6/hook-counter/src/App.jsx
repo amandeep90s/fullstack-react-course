@@ -1,4 +1,7 @@
-import { useReducer } from 'react';
+import { useMemo, useReducer } from 'react';
+import Button from './Button';
+import CounterContext from './CounterContext';
+import Display from './Display';
 
 const counterReducer = (state, action) => {
   switch (action.type) {
@@ -15,15 +18,20 @@ const counterReducer = (state, action) => {
 
 const App = () => {
   const [counter, counterDispatch] = useReducer(counterReducer, 0);
+
+  const contextValue = useMemo(() => {
+    return { counter, counterDispatch };
+  }, [counter]);
+
   return (
-    <div>
-      <div>{counter}</div>
+    <CounterContext.Provider value={contextValue}>
+      <Display />
       <div>
-        <button onClick={() => counterDispatch({ type: 'INC' })}>+</button>
-        <button onClick={() => counterDispatch({ type: 'DEC' })}>-</button>
-        <button onClick={() => counterDispatch({ type: 'ZERO' })}>0</button>
+        <Button type='INC' label='+' />
+        <Button type='DEC' label='-' />
+        <Button type='ZERO' label='0' />
       </div>
-    </div>
+    </CounterContext.Provider>
   );
 };
 
