@@ -6,7 +6,10 @@ export const getAnecdotes = () =>
   axios.get(baseUrl).then((response) => response.data);
 
 export const createAnecdote = (newAnedote) =>
-  axios.post(baseUrl, newAnedote).then((response) => response.data);
+  axios
+    .post(baseUrl, newAnedote)
+    .then((response) => response.data)
+    .catch((error) => error.response.data);
 
 export const updateAnecdote = (updatedAnecdote) =>
   axios
