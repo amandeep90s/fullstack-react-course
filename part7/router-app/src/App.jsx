@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 const Home = () => (
   <div>
@@ -19,41 +19,32 @@ const Users = () => (
 );
 
 const App = () => {
-  const [page, setPage] = useState('home');
-
-  const toPage = (page) => (event) => {
-    event.preventDefault();
-    setPage(page);
-  };
-
-  const content = () => {
-    if (page === 'home') {
-      return <Home />;
-    } else if (page === 'notes') {
-      return <Notes />;
-    } else if (page === 'users') {
-      return <Users />;
-    }
-  };
-
   const padding = { padding: 5 };
 
   return (
-    <>
+    <Router>
       <div>
-        <a href='' onClick={toPage('home')} style={padding}>
+        <Link style={padding} to='/'>
           Home
-        </a>
-        <a href='' onClick={toPage('notes')} style={padding}>
+        </Link>
+        <Link style={padding} to='/notes'>
           Notes
-        </a>
-        <a href='' onClick={toPage('users')} style={padding}>
+        </Link>
+        <Link style={padding} to='/users'>
           Users
-        </a>
+        </Link>
       </div>
 
-      {content()}
-    </>
+      <Routes>
+        <Route path='/notes' element={<Notes />} />
+        <Route path='/users' element={<Users />} />
+        <Route path='/' element={<Home />} />
+      </Routes>
+
+      <div>
+        <i>Note app, Department of Computer Science 2024</i>
+      </div>
+    </Router>
   );
 };
 
