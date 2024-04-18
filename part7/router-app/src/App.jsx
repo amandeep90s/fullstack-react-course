@@ -4,10 +4,9 @@ import {
   Link,
   Navigate,
   Route,
-  BrowserRouter as Router,
   Routes,
+  useMatch,
   useNavigate,
-  useParams,
 } from 'react-router-dom';
 
 const Home = () => (
@@ -27,10 +26,7 @@ const Home = () => (
   </div>
 );
 
-const Note = ({ notes }) => {
-  const id = useParams().id;
-  const note = notes.find((note) => note.id === Number(id));
-
+const Note = ({ note }) => {
   return (
     <div>
       <h2>{note.content}</h2>
@@ -43,7 +39,7 @@ const Note = ({ notes }) => {
 };
 
 Note.propTypes = {
-  notes: PropTypes.array,
+  note: PropTypes.object,
 };
 
 const Notes = ({ notes }) => (
@@ -108,6 +104,8 @@ Login.propTypes = {
 
 const App = () => {
   const padding = { padding: 5 };
+  const match = useMatch('/notes/:id');
+
   const [notes, setNotes] = useState([
     {
       id: 1,
@@ -129,46 +127,47 @@ const App = () => {
     },
   ]);
   const [user, setUser] = useState(null);
+  const note = match
+    ? notes.find((note) => note.id === Number(match.params.id))
+    : null;
 
   const login = (user) => setUser(user);
 
   return (
     <div>
-      <Router>
-        <div>
-          <Link style={padding} to='/'>
-            Home
+      <div>
+        <Link style={padding} to='/'>
+          Home
+        </Link>
+        <Link style={padding} to='/notes'>
+          Notes
+        </Link>
+        <Link style={padding} to='/users'>
+          Users
+        </Link>
+        {user ? (
+          <em>{user} logged in</em>
+        ) : (
+          <Link style={padding} to='/login'>
+            Login
           </Link>
-          <Link style={padding} to='/notes'>
-            Notes
-          </Link>
-          <Link style={padding} to='/users'>
-            Users
-          </Link>
-          {user ? (
-            <em>{user} logged in</em>
-          ) : (
-            <Link style={padding} to='/login'>
-              Login
-            </Link>
-          )}
-        </div>
+        )}
+      </div>
 
-        <Routes>
-          <Route path='/notes/:id' element={<Note notes={notes} />} />
-          <Route path='/notes' element={<Notes notes={notes} />} />
-          <Route
-            path='/users'
-            element={user ? <Users /> : <Navigate replace to='/login' />}
-          />
-          <Route path='/login' element={<Login onLogin={login} />} />
-          <Route path='/' element={<Home />} />
-        </Routes>
+      <Routes>
+        <Route path='/notes/:id' element={<Note note={note} />} />
+        <Route path='/notes' element={<Notes notes={notes} />} />
+        <Route
+          path='/users'
+          element={user ? <Users /> : <Navigate replace to='/login' />}
+        />
+        <Route path='/login' element={<Login onLogin={login} />} />
+        <Route path='/' element={<Home />} />
+      </Routes>
 
-        <div>
-          <i>Note app, Department of Computer Science 2024</i>
-        </div>
-      </Router>
+      <div>
+        <i>Note app, Department of Computer Science 2024</i>
+      </div>
     </div>
   );
 };
